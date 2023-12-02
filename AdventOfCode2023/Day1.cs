@@ -8,18 +8,6 @@ namespace AdventOfCode2023
 {
     static class Day1
     {
-        public static Dictionary<string, int> numbersInLetters = new Dictionary<string, int>()
-            {
-                {"one",1},
-                {"two",2},
-                {"three",3},
-                {"four",4},
-                {"five",5},
-                {"six",6},
-                {"seven",7},
-                {"eight",8},
-                {"nine",9}
-            };
         static void Main(string[] args)
         {
             Day1Task1();
@@ -31,13 +19,34 @@ namespace AdventOfCode2023
 
             Console.WriteLine(GetSum(input));
         }
+        static void Day1Task2()
+        {
+            List<string> input = File.ReadAllLines("input1Day1.txt").ToList();
+            List<string> changedNumbers = new();
+
+            for (int i = 0; i < input.Count; i++)
+            {
+                input[i] = input[i].Replace("one", "o1e"); // replacing the occurances of numbers with their number
+                input[i] = input[i].Replace("two", "t2o"); // plus the letters that can be in another number
+                input[i] = input[i].Replace("three", "th3e");// for example: oneight is 18 so the one shouldn't be 1 but 1e
+                input[i] = input[i].Replace("four", "4");  // but twone is 21 so the one should be o1e etc.
+                input[i] = input[i].Replace("five", "5e");
+                input[i] = input[i].Replace("six", "6");
+                input[i] = input[i].Replace("seven", "7n");
+                input[i] = input[i].Replace("eight", "e8t");
+                input[i] = input[i].Replace("nine", "n9e");
+
+                changedNumbers.Add(input[i]);
+            }
+
+            Console.WriteLine(GetSum(changedNumbers));
+        }
         public static char GetNumber(this string input)
         {
             int j = 0;
             while (j < input.Length && !char.IsDigit(input[j])) j++;
             return input[j];
         }
-
         public static int GetSum(List<string> input)
         {
             List<int> num = new();
@@ -53,58 +62,6 @@ namespace AdventOfCode2023
                 //Console.WriteLine(input[i] + $" {num[i]}");
             }
             return num.Sum();
-        }
-        static void Day1Task2()
-        {
-            List<string> input = File.ReadAllLines("input1Day1.txt").ToList();
-
-            List<string> numbers = GetNumberFromLetters(input);
-
-            foreach(var item in numbers)
-            {
-                Console.WriteLine(item);
-            }
-
-            int res = GetSum(numbers);
-            Console.WriteLine(res);
-        }
-        public static List<string> GetNumberFromLetters(List<string> input)
-        {
-            List<string> numbers = new();
-
-            for (int i = 0; i < input.Count; i++)
-            {
-                foreach (KeyValuePair<string, int> kvp in numbersInLetters)
-                {
-                    if (input.Contains(kvp.Key))
-                    {
-                        Console.WriteLine(input[i].ChangeNumberInLetterToNumber(kvp.Key, kvp.Value));
-                        numbers.Add(input[i].ChangeNumberInLetterToNumber(kvp.Key, kvp.Value));
-                    }
-                }
-            }
-            return numbers;
-        }
-        public static string ChangeNumberInLetterToNumber(this string input, string numberLetter, int number)
-        {
-            List<char> array = new();
-
-            for (int i = 0; i < input.Length-numberLetter.Length; i++)
-            {
-                string sbstr = input.Substring(i, numberLetter.Length);
-
-                if (sbstr == numberLetter)
-                {
-                    array = input.ToCharArray().ToList();
-
-                    array.RemoveRange(i, numberLetter.Length);
-                    array.Insert(i, char.Parse(number.ToString()));
-                }
-            }
-
-
-
-            return new string(array.ToArray());
         }
     }
 }
