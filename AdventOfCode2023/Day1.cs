@@ -10,7 +10,7 @@ namespace AdventOfCode2023
     {
         static void Day1Task1()
         {
-            List<string> input = File.ReadAllLines("input1Day1.txt").ToList();
+            List<string> input = File.ReadAllLines("InputDay1.txt").ToList();
 
             Console.WriteLine(GetSum(input));
         }
