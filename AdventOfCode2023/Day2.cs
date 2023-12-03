@@ -17,33 +17,23 @@ namespace AdventOfCode2023
         }
         public static void Day2Task1()
         {
-            //Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-            //Need to split at ':' ';' and ','
-            //var input = File.ReadAllLines("InputDay2.txt");
-            string input="Game 111: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green";
-
-            string gameNum = input.Split(':')[0].Split(' ')[1];
-            int length = input.Split(':')[1].Split(';').Length;
-            int[,] gameCubes = new int[3, length]; // [0] is red; [1] is green; [2] is blue
-
-            var s = input.Split(':')[1].Split(';').Select(str => str.Substring(1)).ToArray();
-
-
-
-
-            //  | which hand in one game 
-            //  V             | which color
-            //                V            | removing the first whitespace found before every number
-            //                             V
-            string redCubes = input.Split(':')[1].Split(';')[0].Split(',')[0].Substring(1);
-            // Console.WriteLine(redCubes);
-
             List<Game> foo = Parse();
 
-            for (int i = 0; i < foo.Count; i++)
+            List<int> usedGameIds = new(); // need to check if the gameid is already a bad hand because it is taken multiple times
+
+            foreach(var item in foo)
             {
-                Console.WriteLine(foo[i].gameId);
+                if (!item.DetermineIfTheGameIsPossible())
+                {
+                    if (!usedGameIds.Contains(item.gameId)) usedGameIds.Add(item.gameId);
+                }
             }
+
+            List<int> unusedGameIds = Enumerable.Range(1, 100)
+                                                .Except(usedGameIds)
+                                                .ToList();
+
+            Console.WriteLine(unusedGameIds.Sum());
         }
         public static List<Game> Parse()
         {
