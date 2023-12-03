@@ -17,11 +17,11 @@ namespace AdventOfCode2023
         }
         public static void Day2Task1()
         {
-            List<Game> foo = Parse();
+            List<Game> listOfGames = Parse();
 
             List<int> usedGameIds = new(); // need to check if the gameid is already a bad hand because it is taken multiple times
 
-            foreach(var item in foo)
+            foreach(var item in listOfGames)
             {
                 if (!item.DetermineIfTheGameIsPossible())
                 {
