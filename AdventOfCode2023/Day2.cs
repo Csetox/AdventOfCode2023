@@ -15,6 +15,7 @@ namespace AdventOfCode2023
     {
         static void Main()
         {
+            Day2Task1();
             Day2Task2();
         }
         public static void Day2Task1()
@@ -42,13 +43,13 @@ namespace AdventOfCode2023
             List<Game> listOfGames = Parse();
             List<Game> individualGames = new();
 
-            int powerOfCubes = 1;
+            int powerOfCubes = 0;
 
             int j = 0;
             for (int i = 0; i < 100; i++)
             {
                 individualGames.Clear();
-                int currentGame = i+1;
+                int currentGame = i + 1;
 
                 while (j < listOfGames.Count && listOfGames[j].gameId == currentGame)
                 {
@@ -56,33 +57,8 @@ namespace AdventOfCode2023
                     j++;
                 }
                 powerOfCubes += individualGames.GetMinimum();
-                //   Console.WriteLine(powerOfCubes);
-               
             }
-
             Console.WriteLine(powerOfCubes);
-        }
-        public static int GetMinimum(this List<Game> games)
-        {
-            List<int> redCubes = new();
-            List<int> greenCubes = new();
-            List<int> blueCubes = new();
-
-            Console.WriteLine($"GameID of these games: {games[0].gameId}");
-
-            for (int i = 0; i < games.Count; i++)
-            {
-                redCubes.Add(games[i].numberOfReds);
-                greenCubes.Add(games[i].numberOfGreens);
-                blueCubes.Add(games[i].numberOfBlues);
-            }
-
-            foreach (var item in redCubes) Console.WriteLine(item); Console.WriteLine("--------");
-            foreach (var item in greenCubes) Console.WriteLine(item); Console.WriteLine("--------");
-            foreach (var item in blueCubes) Console.WriteLine(item);
-            Console.WriteLine($"Min of red: {redCubes.Max()}\nMin of green: {greenCubes.Max()} \nMin of blue: {blueCubes.Max()}\n");
-            Console.WriteLine($"Power of these sets: {redCubes.Max() * greenCubes.Max() * blueCubes.Max()}\n");
-            return redCubes.Max() * greenCubes.Max() * blueCubes.Max();
         }
         public static List<Game> Parse()
         {
@@ -92,7 +68,6 @@ namespace AdventOfCode2023
 
             for (int i = 0; i < input.Count; i++)
             {
-                int[] cubeHands = { 0, 0, 0 }; // Initializing the array
                 string currentGame = input[i];
 
                 int GameID = Convert.ToInt32(currentGame.Split(':')[0].Split(' ')[1]);
@@ -107,6 +82,22 @@ namespace AdventOfCode2023
                 }
             }
             return gameList;
+        }
+        public static int GetMinimum(this List<Game> games)
+        {
+            List<int> redCubes = new();
+            List<int> greenCubes = new();
+            List<int> blueCubes = new();
+            int power = 0;
+
+            for (int i = 0; i < games.Count; i++)
+            {
+                redCubes.Add(games[i].numberOfReds);
+                greenCubes.Add(games[i].numberOfGreens);
+                blueCubes.Add(games[i].numberOfBlues);
+            }
+            power+=redCubes.Max() * greenCubes.Max() * blueCubes.Max();
+            return power;
         }
         public static Game GetIndividualHands(this string input, int gameId)
         {
@@ -138,11 +129,9 @@ namespace AdventOfCode2023
                         RedGreenBlue[2] = Convert.ToInt32(colors[i, 0]);
                         break;
                 }
-            }
-            
+            }   
             return new Game(gameId, RedGreenBlue[0], RedGreenBlue[1], RedGreenBlue[2]);
         }
-        
     }
     class Game
     {
@@ -150,7 +139,6 @@ namespace AdventOfCode2023
         public int numberOfReds;
         public int numberOfGreens;
         public int numberOfBlues;
-
         public Game(int gameId,int reds,int greens,int blues)
         {
             this.gameId = gameId;
