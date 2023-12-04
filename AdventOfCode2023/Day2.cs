@@ -3,9 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace AdventOfCode2023
 {
@@ -13,7 +15,7 @@ namespace AdventOfCode2023
     {
         static void Main()
         {
-            Day2Task1();
+            Day2Task2();
         }
         public static void Day2Task1()
         {
@@ -34,6 +36,53 @@ namespace AdventOfCode2023
                                                 .ToList();
 
             Console.WriteLine(unusedGameIds.Sum());
+        }
+        public static void Day2Task2()
+        {
+            List<Game> listOfGames = Parse();
+            List<Game> individualGames = new();
+
+            int powerOfCubes = 1;
+
+            int j = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                individualGames.Clear();
+                int currentGame = i+1;
+
+                while (j < listOfGames.Count && listOfGames[j].gameId == currentGame)
+                {
+                    individualGames.Add(listOfGames[j]);
+                    j++;
+                }
+                powerOfCubes += individualGames.GetMinimum();
+                //   Console.WriteLine(powerOfCubes);
+               
+            }
+
+            Console.WriteLine(powerOfCubes);
+        }
+        public static int GetMinimum(this List<Game> games)
+        {
+            List<int> redCubes = new();
+            List<int> greenCubes = new();
+            List<int> blueCubes = new();
+
+            Console.WriteLine($"GameID of these games: {games[0].gameId}");
+
+            for (int i = 0; i < games.Count; i++)
+            {
+                redCubes.Add(games[i].numberOfReds);
+                greenCubes.Add(games[i].numberOfGreens);
+                blueCubes.Add(games[i].numberOfBlues);
+            }
+
+            foreach (var item in redCubes) Console.WriteLine(item); Console.WriteLine("--------");
+            foreach (var item in greenCubes) Console.WriteLine(item); Console.WriteLine("--------");
+            foreach (var item in blueCubes) Console.WriteLine(item);
+            Console.WriteLine($"Min of red: {redCubes.Max()}\nMin of green: {greenCubes.Max()} \nMin of blue: {blueCubes.Max()}\n");
+            Console.WriteLine($"Power of these sets: {redCubes.Max() * greenCubes.Max() * blueCubes.Max()}\n");
+            return redCubes.Max() * greenCubes.Max() * blueCubes.Max();
         }
         public static List<Game> Parse()
         {
